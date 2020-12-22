@@ -15,28 +15,50 @@
     </head>
 
     <body>
-        <!-- These two elements will stay outside of the pages to make sure that they always stay at the top -->
-        <button id="view-highscores">View Highscores</button>
+        <!-- These buttons will navigate to the home and highscores pages.
+             Each button will be hidden when on their respective pages. -->
+        <nav id="nav-buttons">
+            <button id="home-btn">Home</button>
+            <button id="highscores-btn">Highscores</button>
+        </nav>
+
+        <!-- This will display the remaining time -->
         <div id="timer">Time: <span id="time-remaining"></span></div>
 
-        <div class="container">
+        <!-- The Bootstrap grid system is used to ensure a responsive website -->
+        <main class="container">
             <div class="row">
+
+                <!-- This column is here for spacing as long as the column is medium or bigger -->
                 <div class="col-xl-3"></div>
 
-                <div class="col-xl-6 col-sm-12">
-                    <h1 id="header">Commonly used data types DO NOT include:</h1>
+                <!-- This column will contain the actual content -->
+                <section class="col-xl-6 col-sm-12">
 
-                    <div class="btn-group-vertical" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-primary">First</button>
+                    <!-- I am leaving header as a static element because every page
+                         has a header, so I can just change the text for each page. -->
+                    <h1 id="header">Coding Quiz Challenge</h1>
+
+                    <!-- This tag will contain any extra content that I need to add -->
+                    <div id="content"></div>
+
+                    <!-- I'm using a "hide" class to change the display property
+                         of this button group rather than making it truly dynamic.
+                         I'm doing this because of the abundant attributes involved
+                         in the Bootstrap HTML. -->
+                    <div class="btn-group-vertical hide" role="group" aria-label="Basic example">
+                        <button id="first" type="button" class="btn btn-primary"></button>
                         <br>
-                        <button type="button" class="btn btn-primary">Second</button>
+                        <button id="second" type="button" class="btn btn-primary"></button>
                         <br>
-                        <button type="button" class="btn btn-primary">Third</button>
+                        <button id="third" type="button" class="btn btn-primary"></button>
                         <br>
-                        <button type="button" class="btn btn-primary">Fourth</button>
+                        <button id="fourth" type="button" class="btn btn-primary"></button>
                     </div>
-                </div>
+                </section>
             </div>
-        </div>
+        </main>
+
+        <script src="../JavaScript/script.js"></script>
     </body>
 </html>
