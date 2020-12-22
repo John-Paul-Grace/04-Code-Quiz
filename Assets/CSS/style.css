@@ -7,6 +7,11 @@
     left: 10px;
 }
 
+/* Adds a margin for when the two nav buttons appear simultaneously */
+#home-btn {
+    margin-bottom: 10px;
+}
+
 /* This styling positions the element at the top right of the screen. */
 #timer {
     position: absolute;
@@ -16,6 +21,7 @@
 
 .container {
     margin-top: 8%;
+    text-align: center;
 }
 
 /* This class is used to hide an element. */

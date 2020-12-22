@@ -1,3 +1,4 @@
+// jQuery ready method
 $(document).ready(function() {
 
     // This creates the highscore item in local storage if it is not already there
@@ -61,9 +62,13 @@ $(document).ready(function() {
         }
     ];
 
-    // This variable will track the time remaining.
+    // This variable will track the time remaining
     var timeRemaining = 0;
 
+    // This variable tracks the index of the questions array
+    var questionIndex = 0;
+
+    // ===================================================================================
     // Creates the page that shows the title, description, and start button
     function createHomePage() {
         // Hides the home button
@@ -94,7 +99,9 @@ $(document).ready(function() {
         $("#content").append(introParagraph);
         $("#content").append(startButton);
     }
+    // ===================================================================================
 
+    // ===================================================================================
     // Creates the highscore page with a table of top five highscores
     function createHighscorePage() {
         // Hides the highscores button
@@ -109,17 +116,60 @@ $(document).ready(function() {
         // Empties content element
         $("#content").empty();
     }
+    // ===================================================================================
 
-    // This creates the intro page as soon as the website is launched
-    createHomePage();
+    // ===================================================================================
+    function createQuestionPage() {
+        // Unhides the home button
+        $("#home-btn").removeClass("hide");
+
+        // Unhides the highscores button
+        $("#highscores-btn").removeClass("hide");
+
+        // Assigns info to current question object
+        var info = questions[questionIndex];
+
+        // Changes header
+        $("#header").text(info.question);
+
+        // Empties content element
+        $("#content").empty();
+
+        // These set the appropriate choices
+        $("#first").text(info.firstChoice);
+        $("#second").text(info.secondChoice);
+        $("#third").text(info.thirdChoice);
+        $("#fourth").text(info.fourthChoice);
+    }
+    // ===================================================================================
+
+    // ===================================================================================
+    // This function resets to the home page
+    function reset() {
+        $("#time-remaining").text(timeRemaining);
+        createHomePage();
+    }
+    // ===================================================================================
+
+    // Sets up the initial page
+    reset();
 
     // Click listener for the Home button
     $("#home-btn").click(function() {
+        $(".btn-group-vertical").addClass("hide");
         createHomePage();
     });
 
     // Click listener for the highscores button
     $("#highscores-btn").click(function() {
+        $(".btn-group-vertical").addClass("hide");
         createHighscorePage();
+    });
+
+    // Click listener for the start button
+    $(".start-button").click(function() {
+        console.log("test");
+        $(".btn-group-vertical").removeClass("hide");
+        createQuestionPage();
     });
 });
