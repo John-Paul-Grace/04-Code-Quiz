@@ -63,26 +63,49 @@ $(document).ready(function() {
         }
     ];
 
+    // ===================================================================================
+    // This section is for establishing global variables
     // This variable will track the time remaining
-    var timeRemaining = 0;
+    var timeRemaining = questions.length * 1;
 
     // This variable tracks the index of the questions array
-    var questionIndex = 0;
+    var questionIndex = -1;
+
+    /* This will be assigned to a timeout later and will need to be
+       accesible from multiple methods, so it's instanced here to
+       give it global scope. */
+    var nextQuestionTimeout = "";
+
+    /* This will be the interval that counts down the timer. It is
+       instanced here to give it global scope. */
+    var timerInterval = "";
+
+    // Assigns the commonly used elements to variables, so the computer doesn't need to grab them every time.
+    var timer = $("#time-remaining").text(timeRemaining);
+    var btnGroup = $(".btn-group-vertical");
+    var headerEl = $("#headerEl");
+    var homeBtn = $("#home-btn");
+    var highscoresBtn = $("#highscores-btn");
+    var contentEl = $("#content");
+    // ===================================================================================
 
     // ===================================================================================
     // Creates the page that shows the title, description, and start button
     function createHomePage() {
+        // Ensures that the choices are hidden
+        btnGroup.addClass("hide");
+
         // Hides the home button
-        $("#home-btn").addClass("hide");
+        homeBtn.addClass("hide");
 
         // Unhides the highscores button
-        $("#highscores-btn").removeClass("hide");
+        highscoresBtn.removeClass("hide");
 
         // Changes header
-        $("#header").text("Coding Quiz Challenge");
+        headerEl.text("Coding Quiz Challenge");
 
         // Empties content element
-        $("#content").empty();
+        contentEl.empty();
 
         // Creates paragraph element
         var introParagraph = $("<p>").addClass("intro-paragraph");
@@ -97,44 +120,53 @@ $(document).ready(function() {
         startButton.text("Start");
 
         // Appends both elements to the content div
-        $("#content").append(introParagraph);
-        $("#content").append(startButton);
+        contentEl.append(introParagraph);
+        contentEl.append(startButton);
     }
     // ===================================================================================
 
     // ===================================================================================
     // Creates the highscore page with a table of top five highscores
     function createHighscorePage() {
+        // Ensures that the choices are hidden
+        btnGroup.addClass("hide");
+
         // Hides the highscores button
-        $("#highscores-btn").addClass("hide");
+        highscoresBtn.addClass("hide");
 
         // Unhides the home button
-        $("#home-btn").removeClass("hide");
+        homeBtn.removeClass("hide");
 
         // Changes header
-        $("#header").text("Highscores");
+        headerEl.text("Highscores");
 
         // Empties content element
-        $("#content").empty();
+        contentEl.empty();
     }
     // ===================================================================================
 
     // ===================================================================================
     function createQuestionPage() {
+        // This ensures that the timeout will not run multiple times for multiple clicks
+        clearTimeout(nextQuestionTimeout);
+
+        // Changes the questionIndex by 1
+        questionIndex++;
+
         // Unhides the home button
-        $("#home-btn").removeClass("hide");
+        homeBtn.removeClass("hide");
 
         // Unhides the highscores button
-        $("#highscores-btn").removeClass("hide");
+        highscoresBtn.removeClass("hide");
 
         // Assigns info to current question object
         var info = questions[questionIndex];
 
         // Changes header
-        $("#header").text(info.question);
+        headerEl.text(info.question);
 
         // Empties content element
-        $("#content").empty();
+        contentEl.empty();
 
         // These set the appropriate choices
         $("#first").text(info.firstChoice);
@@ -162,55 +194,132 @@ $(document).ready(function() {
         }
         // If the chosenNumber is not the correctChoice, sets text to "Incorrect".
         else {
+            timeRemaining -= 10;
+            timer.text(timeRemaining);
             responseText.text("Incorrect");
         }
 
         // Adds the paragraph element to the content div
-        $("#content").append(responseText);
+        contentEl.append(responseText);
 
-        // Changes the questionIndex by 1
-        questionIndex++;
-
-        // Waits 1 second, then creates a new question page with new index
-        setTimeout(createQuestionPage, 1000);
+        // Waits 1 second, then creates a new question page
+        nextQuestionTimeout = setTimeout(createQuestionPage, 1000);
     }
     // ===================================================================================
 
     // ===================================================================================
-    // This function resets to the home page
+    // This function resets the timer and questionIndex
     function reset() {
-        $("#time-remaining").text(timeRemaining);
-        createHomePage();
+        // Stops the clock
+        clearInterval(timerInterval);
+
+        // Resets the timeRemaining
+        timeRemaining = questions.length * 15;
+
+        // Sets the timer
+        timer.text(timeRemaining);
+
+        // Resets the questionIndex
+        questionIndex = -1;
     }
     // ===================================================================================
 
-    // Sets up the initial page
-    reset();
+    // ===================================================================================
+    /* This function counts down the timeRemaining variable. If time runs
+       out, it runs the gameOver() method. */
+    function countdown() {
+        // timeRemaining is incremented down
+        timeRemaining --;
 
+        // If time runs out, runs gameOver()
+        if (timeRemaining <= 0) {
+            gameOver();
+        }
+
+        // Updates the timer element
+        timer.text(timeRemaining);
+    }
+    // ===================================================================================
+
+    // ===================================================================================
+    /* This function should run at the end of the game. It may be called if
+       time runs out, or if all questions are answered. It will check if the
+       time qualifies for a highscore. If it does, the player will be asked
+       to input their initials. The initials and score will be added to the
+       highscores data in the local storage. Then, the player will brought
+       to the highscores page.*/
+    function gameOver() {
+        // Clears the timeout to ensure a new question page isn't created
+        clearTimeout(nextQuestionTimeout);
+
+        // Stops the clock
+        clearInterval(timerInterval);
+
+        // Grabs the highscores data from local storage
+        var highscores = JSON.parse(localStorage.getItem("highscores"));
+        var lowestHighscore = highscores[highscores.length - 1].score;
+
+        if (timeRemaining >= lowestHighscore) {
+            
+        }
+
+        createHighscorePage();
+    }
+    // ===================================================================================
+
+    // ===================================================================================
     // Click listener for the Home button
-    $("#home-btn").click(function() {
-        $(".btn-group-vertical").addClass("hide");
+    homeBtn.click(function() {
+        // Resets the game
+        reset();
+
+        // Creates the home page
         createHomePage();
     });
+    // ===================================================================================
 
+    // ===================================================================================
     // Click listener for the highscores button
-    $("#highscores-btn").click(function() {
-        $(".btn-group-vertical").addClass("hide");
+    highscoresBtn.click(function() {
+        // Resets the game
+        reset();
+
+        // Creates the highscores page
         createHighscorePage();
     });
+    // ===================================================================================
 
+    // ===================================================================================
     /* Click listener for the start button. The listener is actually
        assigned to the "content" div and is delegated to ".start-button".
        This ensures that we can dynamically create the start button
        without breaking the listener. */
-    $("#content").click(".start-button", function() {
-        $(".btn-group-vertical").removeClass("hide");
+    contentEl.click(".start-button", function() {
+        // Shows the previously hidden choices
+        btnGroup.removeClass("hide");
+
+        // Starts the timer clock
+        timerInterval = setInterval(countdown, 1000);
+
+        // Creates the first question page
         createQuestionPage();
     });
+    // ===================================================================================
 
+    // ===================================================================================
     // Click listener for the button group which delegates to each button.
     $(".btn-group-vertical button").click(function() {
+        // Assigns the button's id to the "choice" variable
         var choice = $(this).attr("id");
+
+        // Determines whether the choice is correct or not
         determineCorrect(choice);
     });
+    // ===================================================================================
+
+    // Sets the time-remaining element to display the timeRemaining
+    timer.text(timeRemaining);
+
+    // Creates the home page
+    createHomePage();
 });

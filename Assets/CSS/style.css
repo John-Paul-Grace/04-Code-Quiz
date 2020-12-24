@@ -19,6 +19,20 @@
     top: 10px;
 }
 
+.btn {
+    border-radius: 0;
+}
+
+.btn-primary:focus {
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: none;
+}
+
+.btn-primary:active {
+    box-shadow: none;
+}
+
 /* Styling for the container to keep it from overlapping with buttons
    as well as aligning the content to center. */
 .container {
