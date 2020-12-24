@@ -19,6 +19,8 @@
     top: 10px;
 }
 
+/* ============================================= */
+/* These remove some unwanted Bootstrap styling. */
 .btn {
     border-radius: 0;
 }
@@ -32,6 +34,7 @@
 .btn-primary:active {
     box-shadow: none;
 }
+/* ============================================= */
 
 /* Styling for the container to keep it from overlapping with buttons
    as well as aligning the content to center. */

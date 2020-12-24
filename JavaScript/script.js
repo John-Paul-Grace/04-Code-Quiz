@@ -1,10 +1,14 @@
 // jQuery ready method
 $(document).ready(function() {
 
-    // This creates the highscore item in local storage if it is not already there
+    /* This creates the highscore item in local storage if it is
+       not already there. It also adds one generic data point. */
     if (!localStorage.getItem("highscores")) {
-        localStorage.setItem("highscores", JSON.stringify([]));
+        localStorage.setItem("highscores", JSON.stringify([{name: "JPG", score: 0}]));
     }
+
+    // Sets the highscores local storage data to a global variable
+    var highscores = JSON.parse(localStorage.getItem("highscores"));
 
     /* This array will contain all of the info for the question pages.
     Each page's info is stored as an object which has a "question" value,
@@ -83,7 +87,6 @@ $(document).ready(function() {
     // Assigns the commonly used elements to variables, so the computer doesn't need to grab them every time.
     var timer = $("#time-remaining").text(timeRemaining);
     var btnGroup = $(".btn-group-vertical");
-    var headerEl = $("#headerEl");
     var homeBtn = $("#home-btn");
     var highscoresBtn = $("#highscores-btn");
     var contentEl = $("#content");
@@ -102,7 +105,7 @@ $(document).ready(function() {
         highscoresBtn.removeClass("hide");
 
         // Changes header
-        headerEl.text("Coding Quiz Challenge");
+        $("#header").text("Coding Quiz Challenge");
 
         // Empties content element
         contentEl.empty();
@@ -138,7 +141,7 @@ $(document).ready(function() {
         homeBtn.removeClass("hide");
 
         // Changes header
-        headerEl.text("Highscores");
+        $("#header").text("Highscores");
 
         // Empties content element
         contentEl.empty();
@@ -163,7 +166,7 @@ $(document).ready(function() {
         var info = questions[questionIndex];
 
         // Changes header
-        headerEl.text(info.question);
+        $("#header").text(info.question);
 
         // Empties content element
         contentEl.empty();
@@ -256,13 +259,15 @@ $(document).ready(function() {
         clearInterval(timerInterval);
 
         // Grabs the highscores data from local storage
-        var highscores = JSON.parse(localStorage.getItem("highscores"));
         var lowestHighscore = highscores[highscores.length - 1].score;
 
         if (timeRemaining >= lowestHighscore) {
-            
+            var initials = prompt("Enter your initials.");
+            highscores.push({name: initials, score: timeRemaining});
+            localStorage.setItem("highscores", JSON.stringify(highscores));
         }
 
+        // Creates the highscore page
         createHighscorePage();
     }
     // ===================================================================================
