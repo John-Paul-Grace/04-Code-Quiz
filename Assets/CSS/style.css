@@ -19,12 +19,30 @@
     top: 10px;
 }
 
+/* Styling for the container to keep it from overlapping with buttons
+   as well as aligning the content to center. */
 .container {
     margin-top: 8%;
     text-align: center;
 }
 
+/* Increases the margin on small screens to keep the container from
+   overlapping with the nav-buttons. */
+@media only screen and (max-width: 920px) {
+    .container {
+        margin-top: 13%;
+    }
+}
+
 /* This class is used to hide an element. */
 .hide {
     display: none;
+}
+
+/* This class styles the text that appears to tell the user whether
+   or not they chose correctly. */
+.response-text {
+    margin-top: 10px;
+    font-size: large;
+    font-weight: bold;
 }

@@ -8,8 +8,9 @@ $(document).ready(function() {
 
     /* This array will contain all of the info for the question pages.
     Each page's info is stored as an object which has a "question" value,
-    four values for the choices available as answers,
-    and one value noting the correct choice. */
+    four values for the choices available as answers, and one value noting
+    the correct choice. The correct choice is listed as a string value so
+    that I can check whether the id of the button equals the "correct" string. */
     var questions = [
         // First Question
         {
@@ -18,7 +19,7 @@ $(document).ready(function() {
             secondChoice: "2. Booleans",
             thirdChoice: "3. Strings",
             fourthChoice: "4. Numbers",
-            correct: 1
+            correctChoice: "first"
         },
 
         // Second Question
@@ -28,7 +29,7 @@ $(document).ready(function() {
             secondChoice: "2. Curly brackets",
             thirdChoice: "3. Square brackets",
             fourthChoice: "4. Parentheses",
-            correct: 4
+            correctChoice: "fourth"
         },
 
         // Third Question
@@ -38,7 +39,7 @@ $(document).ready(function() {
             secondChoice: "2. Other arrays",
             thirdChoice: "3. Booleans",
             fourthChoice: "4. All of the above",
-            correct: 4
+            correctChoice: "fourth"
         },
 
         // Fourth Question
@@ -48,7 +49,7 @@ $(document).ready(function() {
             secondChoice: "2. Curly brackets",
             thirdChoice: "3. Quotes",
             fourthChoice: "4. Parentheses",
-            correct: 3
+            correctChoice: "third"
         },
 
         // Fifth Question
@@ -58,7 +59,7 @@ $(document).ready(function() {
             secondChoice: "2. console.log()",
             thirdChoice: "3. For loops",
             fourthChoice: "4. Terminal/Bash",
-            correct: 2
+            correctChoice: "second"
         }
     ];
 
@@ -144,6 +145,38 @@ $(document).ready(function() {
     // ===================================================================================
 
     // ===================================================================================
+    /* This function determines whether the clicked button
+       is the correct answer. The "number" parameter should
+       be a string equal to the button's id and should be
+       passed by the click listener. Once it is determined
+       whether or not number is equal to the correctChoice,
+       text appears below the button group saying "correct"
+       or "incorrect" */
+    function determineCorrect(chosenNumber) {
+        // Creates a paragraph element
+        var responseText = $("<p>").addClass("response-text");
+
+        // If the chosenNumber is the correctChoice, sets text to "Correct".
+        if (chosenNumber === questions[questionIndex].correctChoice) {
+            responseText.text("Correct");
+        }
+        // If the chosenNumber is not the correctChoice, sets text to "Incorrect".
+        else {
+            responseText.text("Incorrect");
+        }
+
+        // Adds the paragraph element to the content div
+        $("#content").append(responseText);
+
+        // Changes the questionIndex by 1
+        questionIndex++;
+
+        // Waits 1 second, then creates a new question page with new index
+        setTimeout(createQuestionPage, 1000);
+    }
+    // ===================================================================================
+
+    // ===================================================================================
     // This function resets to the home page
     function reset() {
         $("#time-remaining").text(timeRemaining);
@@ -166,10 +199,18 @@ $(document).ready(function() {
         createHighscorePage();
     });
 
-    // Click listener for the start button
-    $(".start-button").click(function() {
-        console.log("test");
+    /* Click listener for the start button. The listener is actually
+       assigned to the "content" div and is delegated to ".start-button".
+       This ensures that we can dynamically create the start button
+       without breaking the listener. */
+    $("#content").click(".start-button", function() {
         $(".btn-group-vertical").removeClass("hide");
         createQuestionPage();
+    });
+
+    // Click listener for the button group which delegates to each button.
+    $(".btn-group-vertical button").click(function() {
+        var choice = $(this).attr("id");
+        determineCorrect(choice);
     });
 });
