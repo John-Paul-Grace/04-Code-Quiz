@@ -236,6 +236,21 @@ $(document).ready(function() {
     // ===================================================================================
 
     // ===================================================================================
+    // Creates a page for the user to insert their initials
+    function createInitialsPage() {
+        homeBtn.addClass("hide");
+        highscoresBtn.addClass("hide");
+        btnGroup.addClass("hide");
+
+        $("#header").text("Enter your initials");
+
+        
+        $("<input>").attr("type", "text");
+    }
+
+    // ===================================================================================
+
+    // ===================================================================================
     /* This function determines whether the clicked button
        is the correct answer. The "number" parameter should
        be a string equal to the button's id and should be
@@ -314,14 +329,36 @@ $(document).ready(function() {
         // Stops the clock
         clearInterval(timerInterval);
 
-        // Grabs the highscores data from local storage
+        // Grabs the lowest highscore from local storage
         var lowestHighscore = highscores[highscores.length - 1].score;
 
+        // Checks if the achieved score is better than or equal to the lowest highscore
         if (timeRemaining >= lowestHighscore) {
+            // Asks the user for their initials
             var initials = prompt("Enter your initials.");
-            highscores.push({name: initials, score: timeRemaining});
+
+            // Boolean flag to prevent the highscore from being added multiple times
+            var added = false;
+
+            // Inserts the highscore where appropriate
+            for (var i = 0; i < highscores.length && !added; i++) {
+                // Checks that added = false and that the achieved score is better than the current index of highscore
+                if (timeRemaining >= highscores[i].score) {
+                    var highscoreObject = {name: initials, score: timeRemaining};
+                    highscores.splice(i, 0, highscoreObject);
+                    added = true;
+                }
+            }
+
+            // Cuts the highscores down to five elements
+            highscores = highscores.slice(0, 5);
+
             localStorage.setItem("highscores", JSON.stringify(highscores));
         }
+
+        // Sets highscores variable to the local storage
+
+        // Pulls highscores from local storage
 
         // Creates the highscore page
         createHighscorePage();
