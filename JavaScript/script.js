@@ -88,6 +88,9 @@ $(document).ready(function() {
        instanced here to give it global scope. */
     var timerInterval = "";
 
+    // A boolean flag to prevent multiple clicks on the answers
+    var clicked = false;
+
     // Assigns the commonly used elements to variables, so the computer doesn't need to grab them every time.
     var timer = $("#time-remaining").text(timeRemaining);
     var btnGroup = $(".btn-group-vertical");
@@ -202,6 +205,9 @@ $(document).ready(function() {
     function createQuestionPage() {
         // This ensures that the timeout will not run multiple times for multiple clicks
         clearTimeout(nextQuestionTimeout);
+
+        // Resets the clicked boolean
+        clicked = false;
 
         // Changes the questionIndex by 1
         questionIndex++;
@@ -409,11 +415,16 @@ $(document).ready(function() {
     // ===================================================================================
     // Click listener for the button group which delegates to each button.
     $(".btn-group-vertical button").click(function() {
-        // Assigns the button's id to the "choice" variable
-        var choice = $(this).attr("id");
+        if (!clicked) {
+            // Sets clicked to true to prevent more clicks
+            clicked = true;
 
-        // Determines whether the choice is correct or not
-        determineCorrect(choice);
+            // Assigns the button's id to the "choice" variable
+            var choice = $(this).attr("id");
+
+            // Determines whether the choice is correct or not
+            determineCorrect(choice);
+        }
     });
     // ===================================================================================
 
