@@ -244,14 +244,42 @@ $(document).ready(function() {
     // ===================================================================================
     // Creates a page for the user to insert their initials
     function createInitialsPage() {
+        // Hides both nav buttons and the choices
         homeBtn.addClass("hide");
         highscoresBtn.addClass("hide");
         btnGroup.addClass("hide");
 
-        $("#header").text("Enter your initials");
+        // Changes the header
+        $("#header").text("You got a highscore!");
 
+        // Displays the final score in a message
+        var scoreMessage = $("<p>").text("Your final score was " + timeRemaining);
+
+        // Appends the scoreMessage to the content div
+        contentEl.append(scoreMessage);
         
-        $("<input>").attr("type", "text");
+        // Creates a form object
+        var inputForm = $("<form>").addClass("input-form");
+
+        // Creates a text input box with a placeholder, minimum length, and maximum length
+        var inputBox = $("<input>").attr("type", "text");
+        inputBox.addClass("initials-input");
+        inputBox.attr("placeholder", "Enter your initials here");
+        inputBox.attr("minlength", "1");
+        inputBox.attr("maxlength", "3");
+
+        // Appends the inputBox to the inputForm
+        inputForm.append(inputBox);
+
+        // Creates a submit button object
+        var submitBtn = $("<input>").attr("type", "submit");
+        submitBtn.addClass("submit-btn");
+
+        // Appends the submitBtn to the inputForm
+        inputForm.append(submitBtn);
+
+        // Appends the inputForm to the contentDiv
+        contentEl.append(inputForm);
     }
 
     // ===================================================================================
@@ -338,38 +366,17 @@ $(document).ready(function() {
         // Grabs the lowest highscore from local storage
         var lowestHighscore = highscores[highscores.length - 1].score;
 
+        console.log("lowestHighscore: " + lowestHighscore);
+
         // Checks if the achieved score is better than or equal to the lowest highscore
         if (timeRemaining >= lowestHighscore) {
-            // Asks the user for their initials
-            var initials = prompt("Enter your initials.");
-
-            // Boolean flag to prevent the highscore from being added multiple times
-            var added = false;
-
-            // Inserts the highscore where appropriate and checks on each loop whether the score has been added
-            for (var i = 0; i < highscores.length && !added; i++) {
-                // Checks that the achieved score is better than the current index of highscore
-                if (timeRemaining >= highscores[i].score) {
-                    // Creates an object with the relevant info
-                    var highscoreObject = {name: initials, score: timeRemaining};
-
-                    // Adds the object in at the current index
-                    highscores.splice(i, 0, highscoreObject);
-
-                    // Sets added to true so the loop will stop
-                    added = true;
-                }
-            }
-
-            // Cuts the highscores down to five elements
-            highscores = highscores.slice(0, 5);
-
-            // Sets the local storage to be accurate
-            localStorage.setItem("highscores", JSON.stringify(highscores));
+            console.log("New Highscore");
+            createInitialsPage();
         }
-
-        // Creates the highscore page
-        createHighscorePage();
+        else {
+            // Creates the highscore page
+            createHighscorePage();
+        }
     }
     // ===================================================================================
 
@@ -413,6 +420,46 @@ $(document).ready(function() {
     // ===================================================================================
 
     // ===================================================================================
+    /* Click listener for the start button. The listener is actually
+       assigned to the "content" div and is delegated to ".start-button".
+       This ensures that we can dynamically create the start button
+       without breaking the listener. */
+    contentEl.delegate(".submit-btn", "click", function(event) {
+        event.preventDefault();
+
+        // Asks the user for their initials
+        var initials = $(".initials-input").val();
+
+        // Boolean flag to prevent the highscore from being added multiple times
+        var added = false;
+
+        // Inserts the highscore where appropriate and checks on each loop whether the score has been added
+        for (var i = 0; i < highscores.length && !added; i++) {
+            // Checks that the achieved score is better than the current index of highscore
+            if (timeRemaining >= highscores[i].score) {
+                // Creates an object with the relevant info
+                var highscoreObject = {name: initials, score: timeRemaining};
+
+                // Adds the object in at the current index
+                highscores.splice(i, 0, highscoreObject);
+
+                // Sets added to true so the loop will stop
+                added = true;
+            }
+        }
+
+        // Cuts the highscores down to five elements
+        highscores = highscores.slice(0, 5);
+
+        // Sets the local storage to be accurate
+        localStorage.setItem("highscores", JSON.stringify(highscores));
+
+        // Creates the highscores page
+        createHighscorePage();
+    });
+    // ===================================================================================
+
+    // ===================================================================================
     // Click listener for the button group which delegates to each button.
     $(".btn-group-vertical button").click(function() {
         if (!clicked) {
@@ -433,4 +480,8 @@ $(document).ready(function() {
 
     // Creates the home page
     createHomePage();
+
+    // contentEl.empty();
+
+    // createInitialsPage();
 });
