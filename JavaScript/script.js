@@ -212,20 +212,26 @@ $(document).ready(function() {
         // Unhides the highscores button
         highscoresBtn.removeClass("hide");
 
-        // Assigns info to current question object
-        var info = questions[questionIndex];
+        // If statement to check if there is another question to create a page for
+        if (!questions[questionIndex]) {
+            gameOver();
+        }
+        else {
+            // Assigns info to current question object
+            var info = questions[questionIndex];
 
-        // Changes header
-        $("#header").text(info.question);
+            // Changes header
+            $("#header").text(info.question);
 
-        // Empties content element
-        contentEl.empty();
+            // Empties content element
+            contentEl.empty();
 
-        // These set the appropriate choices
-        $("#first").text(info.firstChoice);
-        $("#second").text(info.secondChoice);
-        $("#third").text(info.thirdChoice);
-        $("#fourth").text(info.fourthChoice);
+            // These set the appropriate choices
+            $("#first").text(info.firstChoice);
+            $("#second").text(info.secondChoice);
+            $("#third").text(info.thirdChoice);
+            $("#fourth").text(info.fourthChoice);
+        }
     }
     // ===================================================================================
 
