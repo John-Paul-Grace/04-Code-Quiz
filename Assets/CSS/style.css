@@ -63,3 +63,18 @@
     font-size: large;
     font-weight: bold;
 }
+
+table {
+    width: 100%;
+    font-size: large;
+    border: 5px solid black;
+}
+
+tr {
+    border: 2px solid grey;
+    height: 50px;
+}
+
+/* th {
+    width: 200px;
+} */
