@@ -2,9 +2,13 @@
 $(document).ready(function() {
 
     /* This creates the highscore item in local storage if it is
-       not already there. It also adds one generic data point. */
+       not already there. It also adds five generic data points. */
     if (!localStorage.getItem("highscores")) {
-        localStorage.setItem("highscores", JSON.stringify([{name: "JPG", score: 0}]));
+        localStorage.setItem("highscores", JSON.stringify([{name: "ABC", score: 0},
+                                                           {name: "ABC", score: 0},
+                                                           {name: "ABC", score: 0},
+                                                           {name: "ABC", score: 0},
+                                                           {name: "ABC", score: 0}]));
     }
 
     // Sets the highscores local storage data to a global variable
@@ -70,7 +74,7 @@ $(document).ready(function() {
     // ===================================================================================
     // This section is for establishing global variables
     // This variable will track the time remaining
-    var timeRemaining = questions.length * 1;
+    var timeRemaining = questions.length * 15;
 
     // This variable tracks the index of the questions array
     var questionIndex = -1;
@@ -145,6 +149,52 @@ $(document).ready(function() {
 
         // Empties content element
         contentEl.empty();
+
+        // Creates a table
+        var table = $("<table>");
+
+        // Creates a row for headers
+        var tableHeaders = $("<tr>");
+
+        // Creates headings for the table
+        var nameHeader = $("<th>").text("Name");
+        var scoreHeader = $("<th>").text("Score");
+
+        // Appends headers to tableHeaders
+        tableHeaders.append(nameHeader);
+        tableHeaders.append(scoreHeader);
+
+        // Appends tableHeaders to table
+        table.append(tableHeaders);
+
+        // Creates an array of rows for table data
+        var tableData = [$("<tr>"), $("<tr>"), $("<tr>"), $("<tr>"), $("<tr>")];
+
+        /* A for loop that creates and appends data to each row. Each data tag
+           will contain an entry from the highscores. Then, each row will be
+           appended to the table. */
+        for (var i = 0; i < tableData.length; i++) {
+            // Grabs the current row
+            var row = tableData[i];
+
+            // Grabs the highscore data
+            var highscoreName = highscores[i].name;
+            var highscoreScore = highscores[i].score;
+            
+            // Creates data tags with the highscore data
+            var nameData = $("<td>").text(highscoreName);
+            var scoreData = $("<td>").text(highscoreScore);
+
+            // Appends data tags to row
+            row.append(nameData);
+            row.append(scoreData);
+
+            // Appends row to table
+            table.append(row);
+        }
+
+        // Appends table to contentEl
+        contentEl.append(table);
     }
     // ===================================================================================
 
