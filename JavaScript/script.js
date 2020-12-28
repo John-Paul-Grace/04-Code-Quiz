@@ -340,12 +340,17 @@ $(document).ready(function() {
             // Boolean flag to prevent the highscore from being added multiple times
             var added = false;
 
-            // Inserts the highscore where appropriate
+            // Inserts the highscore where appropriate and checks on each loop whether the score has been added
             for (var i = 0; i < highscores.length && !added; i++) {
-                // Checks that added = false and that the achieved score is better than the current index of highscore
+                // Checks that the achieved score is better than the current index of highscore
                 if (timeRemaining >= highscores[i].score) {
+                    // Creates an object with the relevant info
                     var highscoreObject = {name: initials, score: timeRemaining};
+
+                    // Adds the object in at the current index
                     highscores.splice(i, 0, highscoreObject);
+
+                    // Sets added to true so the loop will stop
                     added = true;
                 }
             }
@@ -353,12 +358,9 @@ $(document).ready(function() {
             // Cuts the highscores down to five elements
             highscores = highscores.slice(0, 5);
 
+            // Sets the local storage to be accurate
             localStorage.setItem("highscores", JSON.stringify(highscores));
         }
-
-        // Sets highscores variable to the local storage
-
-        // Pulls highscores from local storage
 
         // Creates the highscore page
         createHighscorePage();
