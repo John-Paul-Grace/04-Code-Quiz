@@ -349,7 +349,7 @@ $(document).ready(function() {
        assigned to the "content" div and is delegated to ".start-button".
        This ensures that we can dynamically create the start button
        without breaking the listener. */
-    contentEl.click(".start-button", function() {
+    contentEl.delegate(".start-button", "click", function() {
         // Shows the previously hidden choices
         btnGroup.removeClass("hide");
 
