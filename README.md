@@ -1,7 +1,7 @@
 # Code-Quiz
 
 ## Link to Website
-https://john-paul-grace.github.io/04-Code-Quiz/
+https://john-paul-grace.github.io/Code-Quiz/
 
 ## Description
 
