@@ -1,4 +1,4 @@
-# 04-Code-Quiz
+# Code-Quiz
 
 ## Link to Website
 https://john-paul-grace.github.io/04-Code-Quiz/
